@@ -90,7 +90,7 @@
 
 	</cffunction>
 
-	<cffunction name="creating_an_email_should_validate_email_address" returntype="void" access="public" mxunit:expectedException="Application">
+	<cffunction name="creating_an_email_should_validate_email_addresses" returntype="void" access="public" mxunit:expectedException="Application">
 		
 		<cfset var oEmail = new fcbEmail(to = 'scott@scottmebberson', from = 'Scott Mebberson', subject = 'Test subject') />
 
@@ -109,6 +109,39 @@
 
 		<!--- try and send the email without a body, it should fail --->
 		<cfset oEmail.send() />
+
+	</cffunction>
+
+	<cffunction name="test_package_only_helper_stripValuesFromList">
+		
+		<cfset var list1 = 'a,b,c,d,e' />
+		<cfset var list2 = 'c,d' />
+
+		<cfset var oEmail = new fcbEmail(
+				to = stDefault.to,
+				from = stDefault.from,
+				subject = stDefault.subject
+			) />
+
+		<cfset makePublic(oEmail, "stripValuesFromList") />
+
+		<cfset assertEquals('a,b,e', oEmail.stripValuesFromList(list1, list2)) />
+
+	</cffunction>
+
+	<cffunction name="test_package_only_helper_checkForValidEmail">
+
+		<cfset var oEmail = new fcbEmail(
+				to = stDefault.to,
+				from = stDefault.from,
+				subject = stDefault.subject
+			) />
+
+		<cfset makePublic(oEmail, "checkForValidEmail") />
+
+		<cfset assertTrue(oEmail.checkForValidEmail('log@thememphisagency.com')) />
+		<cfset assertTrue(oEmail.checkForValidEmail('log@thememphisagency.com.au')) />
+		<cfset assertFalse(oEmail.checkForValidEmail('log@thememphisagency')) />
 
 	</cffunction>
 	
