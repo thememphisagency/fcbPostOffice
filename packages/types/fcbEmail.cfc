@@ -39,7 +39,7 @@
 
 	</cffunction>
 
-	<cffunction name="send" returntype="void" access="public">
+	<cffunction name="send" returntype="string" access="public">
 		
 		<cfargument name="bLog" type="boolean" required="false" default="true" />
 
@@ -48,14 +48,50 @@
 			<cfthrow type="Application" detail="You can't send an email without a body." />
 		</cfif>
 
+		<cfset var objectid = '' />
+		<cfset var attr = structNew() />
+		<cfloop list="to,from,subject,body,cc,bcc" index="prop">
+			<cfif len(this[prop])>
+				<cfset attr[prop] = this[prop] />
+			</cfif>
+		</cfloop>
+
 		<!--- let's send the email and log it if required --->
+		<cfset var mailServer = new mail() />
+		<cfset mailServer.setAttributes(attr) />
+		<cfset mailServer.send() />
 
 		<!--- do we need to log the email? --->
 		<cfif arguments.bLog>
 			
 			<!--- create the log and go for it --->
+			<cfset var objectid = this.logEmail() />
 
 		</cfif>
+
+		<cfreturn objectid />
+
+	</cffunction>
+
+	<cffunction name="logEmail" returntype="string" access="package">
+
+		<cfset var log = application.fapi.getContentType('fcbLog') />
+		<cfset var stProperties = structNew() />
+		<cfset var data = structNew() />
+
+		<!--- serialize properties into a json object --->
+		<cfloop list="to,from,subject,body,cc,bcc" index="prop">
+			<cfif len(this[prop])>
+				<cfset data[prop] = this[prop] />
+			</cfif>
+		</cfloop>
+
+		<cfset stProperties.data = serializeJSON(data) />
+		<cfset stProperties.reference = 'fcbEmail' />
+
+		<cfset var stObj = log.createData(stProperties = stProperties) />
+
+		<cfreturn stObj.objectid />
 
 	</cffunction>
 

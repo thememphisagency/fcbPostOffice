@@ -8,20 +8,29 @@
 		<!--- let the framework do its thing --->
 		<cfset super.setUp() />
 
-		<!--- defined a standard email struct --->
 		<cfscript>
+			/* define a standard email struct */
 			stDefault = {};
 			stDefault.to = 'log@thememphisagency.com';
-			stDefault.from = 'EmailTestCase';
+			stDefault.from = 'log@thememphisagency.com';
 			stDefault.subject = 'EmailTestCase Subject';
 			stDefault.body = 'EmailTestCase Body';
+
+			/* a reference to data that needs to be removed from the database */
+			aPin = [];
 		</cfscript>
 
 	</cffunction>
 
-	<!--- cffunction name="tearDown" returntype="void" access="public">
-		<!--- Any code needed to return your environment to normal goes here --->
-	</cffunction --->
+	<cffunction name="tearDown" returntype="void" access="public">
+
+		<!--- if anything was inserted into the database, delete it --->
+		<cfloop array="#aPin#" index="objectid">
+			<!--- default to log, because that is the only thing that gets created within these tests --->
+			<cfset application.fapi.getContentType('fcbLog').delete(objectid) />
+		</cfloop>
+
+	</cffunction>
 
 	<cffunction name="should_be_able_create_email_stub" returntype="void" access="public">
 		
@@ -112,6 +121,99 @@
 
 	</cffunction>
 
+	<cffunction name="test_package_only_helper_logEmail" returntype="void" access="public">
+		
+		<cfset var logObjectid = '' />
+
+		<cfset var oEmail = new fcbEmail(
+				to = stDefault.to,
+				from = stDefault.from,
+				subject = stDefault.subject,
+				body = stDefault.body
+			) />
+
+		<cfset makePublic(oEmail, 'logEmail') />
+
+		<!--- log the email --->
+		<cfset logObjectid = oEmail.logEmail() />
+		<cfset arrayAppend(aPin, logObjectid) />
+
+		<!--- guard --->
+		<cfset assertTrue(len(logObjectid)) />
+
+		<!--- grab the record --->
+		<cfset var oLog = application.fapi.getContentObject(logObjectid, 'fcbLog') />
+
+		<!--- check it's been inserted into the database --->
+		<cfset assertEquals(logObjectid, oLog.objectid) />
+		<cfset assertEquals(stDefault, deserializeJSON(oLog.data)) />
+
+	</cffunction>
+
+	<cffunction name="should_send_an_email_and_log_it" returntype="void" access="public">
+		
+		<cfset var logObjectid = '' />
+
+		<!--- make the subject unique for these purposes --->
+		<cfset stDefault.subject = stDefault.subject & '-' & CreateUUID() />
+
+		<cfset var oEmail = new fcbEmail(
+				to = stDefault.to,
+				from = stDefault.from,
+				subject = stDefault.subject,
+				body = stDefault.body
+			) />
+
+		<!--- send the email --->
+		<cfset logObjectid = oEmail.send() />
+		<cfset arrayAppend(aPin, logObjectid) />
+
+		<!--- give coldfusion time to write the logs --->
+		<cfset sleep(12000) />
+
+		<!--- guard --->
+		<cfset assertTrue(len(logObjectid)) />
+
+		<!--- grab the record --->
+		<cfset var oLog = application.fapi.getContentObject(logObjectid, 'fcbLog') />
+
+		<!--- check it's been inserted into the database --->
+		<cfset assertEquals(logObjectid, oLog.objectid) />
+		<cfset assertEquals(stDefault, deserializeJSON(oLog.data)) />
+
+		<!--- check the email has been sent --->
+		<cfset assertTrue(checkLogs(stDefault.subject, stDefault.from), "subject #stDefault.subject#") />
+
+	</cffunction>
+
+	<cffunction name="should_send_an_email_and_not_log_it" returntype="void" access="public">
+		
+		<cfset var logObjectid = '' />
+
+		<!--- make the subject unique for these purposes --->
+		<cfset stDefault.subject = stDefault.subject & '-' & CreateUUID() />
+
+		<cfset var oEmail = new fcbEmail(
+				to = stDefault.to,
+				from = stDefault.from,
+				subject = stDefault.subject,
+				body = stDefault.body
+			) />
+
+		<!--- send the email --->
+		<cfset logObjectid = oEmail.send(false) />
+
+		<!--- give coldfusion time to write the logs --->
+		<cfset sleep(12000) />
+
+		<!--- guard --->
+		<cfset assertFalse(len(logObjectid)) />
+
+		<!--- check the email has been sent --->
+		<cfset assertTrue(checkLogs(stDefault.subject, stDefault.from), 'subject: #stDefault.subject#') />
+
+	</cffunction>
+
 	<cffunction name="test_package_only_helper_stripValuesFromList">
 		
 		<cfset var list1 = 'a,b,c,d,e' />
@@ -142,6 +244,24 @@
 		<cfset assertTrue(oEmail.checkForValidEmail('log@thememphisagency.com')) />
 		<cfset assertTrue(oEmail.checkForValidEmail('log@thememphisagency.com.au')) />
 		<cfset assertFalse(oEmail.checkForValidEmail('log@thememphisagency')) />
+
+	</cffunction>
+
+	<cffunction name="checkLogs" returntype="boolean" access="private">
+		
+		<cfargument name="subject" type="string" required="true" />
+		<cfargument name="from" type="string" required="true" />
+
+		<cfset var bReturn = false />
+		<cfset var logFile = Server.ColdFusion.RootDir & "/logs/mailsent.log">
+		<cfset var logContent = '' />
+		<cfset var regex = """Mail: '#arguments.subject#' From:'#arguments.from#'" />
+
+		<cfif fileExists(logFile)>
+			<cfset logContent = FileRead(logFile) />
+		</cfif>
+
+		<cfreturn ArrayLen(reMatchNoCase(regex, logContent)) GT 0 />
 
 	</cffunction>
 	
