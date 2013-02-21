@@ -9,8 +9,7 @@ Features
 * All emails sent using the framework should be logged.
 * All emails should use a webskin, like any other display oriented object.
 
-Requirements
+Dependencies
 ------------
 
-* To be built against the 6.2 stream of the FarCry framework.
-* Everything MUST be unit tested using the mxUnit FarCry plugin.
+* fcbHistory
