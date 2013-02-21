@@ -19,3 +19,34 @@ Dependencies
 ------------
 
 * fcbHistory
+
+Basic usage
+-----------
+
+	<cfimport path="farcry.plugins.fcbpostoffice.packages.types.fcbEmail" />
+
+	<cfset var oEmail = new fcbEmail(
+			to = 'to@domain.com',
+			from = 'sender@domain.com',
+			subject = 'email subject',
+			body = 'email body'
+		) />
+
+	<!--- send the email --->
+	<cfset logObjectid = oEmail.send() />
+
+To send without logging an email:
+
+	<!--- send without logging --->
+	<cfset oEmail.send() />
+
+You can also define the following properties for the email:
+
+	<cfset var oEmail = new fcbEmail(
+		to = 'to@domain.com',
+		from = 'sender@domain.com',
+		subject = 'email subject',
+		body = 'email body',
+		cc = 'cc@domain.com',
+		bcc = 'bcc@domain.com'
+	) />
