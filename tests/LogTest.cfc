@@ -14,7 +14,7 @@
 
 			stDefault = {};
 			stDefault.reference = 'LogTest';
-			stDefault.text = 'EmailTestCase';
+			stDefault.title = 'EmailTestCase';
 			stDefault.data = SerializeJSON(stData);
 		</cfscript>
 
@@ -29,13 +29,13 @@
 		<cfset var stLog = createTemporaryObject(
 				typename = 'fcbLog',
 				reference = stDefault.reference,
-				text = stDefault.text,
+				title = stDefault.title,
 				data = stDefault.data
 			) />
 
 		<cfset assertContentTypeExists(typename = 'fcbLog') />
 		<cfset assertObjectExists(typename = 'fcbLog', objectid = stLog.objectid) />
-		<cfset assertEquals('Log created by LogTest', stLog.label) />
+		<cfset assertEquals('Log created by LogTest', stLog.title) />
 
 	</cffunction>
 	

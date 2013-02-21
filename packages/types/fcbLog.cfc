@@ -1,8 +1,8 @@
-<cfcomponent output="false" extends="farcry.core.packages.types.types" displayname="Application Log" hint="A log record to store into the database" bObjectBroker="false" bSystem="true" bAudit="false" bRefObjects="false">
+<cfcomponent output="false" extends="farcry.core.packages.types.types" displayname="Application Log" hint="A log record to store into the database" bObjectBroker="false" bSystem="false" bAudit="false" bRefObjects="false">
 
-	<cfproperty ftSeq="1" ftFieldset="" ftLabel="Reference" name="reference" type="string" ftType="string" ftDisplayOnly="true" default="" ftDefault="" required="false" />
-	<cfproperty ftSeq="2" ftFieldset="" ftLabel="Text" name="text" type="string" ftType="string" ftDisplayOnly="true" default="" ftDefault="" required="false" />
-	<cfproperty ftSeq="3" ftFieldset="" ftLabel="Data" name="data" type="longchar" ftType="" ftDisplayOnly="true" default="" ftDefault="" required="false" />
+	<cfproperty ftSeq="1" ftLabel="Reference" name="reference" type="string" ftType="string" ftDisplayOnly="true" default="" ftDefault="" required="false" />
+	<cfproperty ftSeq="2" ftLabel="Title" name="title" type="string" ftType="string" bLabel="true" ftDisplayOnly="true" default="" ftDefault="" required="false" />
+	<cfproperty ftSeq="3" ftLabel="Data" name="data" type="longchar" ftType="" ftDisplayOnly="true" default="" ftDefault="" required="false" />
 
 	<cffunction name="createData" access="public" returntype="any" output="true" hint="Creates an instance of an object">
 		<cfargument name="stProperties" type="struct" required="true" hint="Structure of properties for the new object instance">
@@ -13,7 +13,7 @@
 
 		<cfset var stObj = {} />
 
-		<cfset arguments.stProperties.label = 'Log created by #arguments.stProperties.reference#' />
+		<cfset arguments.stProperties.title = 'Log created by #arguments.stProperties.reference#' />
 		<cfset stObj = super.createData(
 				stProperties = arguments.stProperties,
 				user = arguments.user,
@@ -39,7 +39,7 @@
 
 		<cfset var stObj = {} />
 
-		<cfset arguments.stProperties.label = 'Log created by #arguments.stProperties.reference#' />
+		<cfset arguments.stProperties.title = 'Log created by #arguments.stProperties.reference#' />
 		<cfset stObj = super.setData(
 				stProperties = arguments.stProperties,
 				user = arguments.user,
