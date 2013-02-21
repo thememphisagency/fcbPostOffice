@@ -9,6 +9,12 @@ Features
 * All emails sent using the framework should be logged.
 * All emails should use a webskin, like any other display oriented object.
 
+Installation
+------------
+
+* clone this repository using GIT to your local computer
+* open farcryConstructor.cfm and add ",fcbpostoffice,fcbhistory,testmxunit" to the `THIS.plugins` variable
+
 Dependencies
 ------------
 
