@@ -4,9 +4,9 @@
 
 <section id="admin">		
 		<subsection id="coapi" mergeType="merge" label="Developer Utilities">
-		<menu id="logs" label="Logging">
-			<menuitem id="listLog" label="Logs" link="/admin/customadmin.cfm?module=customlists/fcbLog.cfm&amp;plugin=fcbpostoffice"/>		
-	</menu>
+			<menu id="logs" label="Logging">
+				<menuitem id="listLog" label="Logs" link="/admin/customadmin.cfm?module=customlists/fcbLog.cfm&amp;plugin=fcbpostoffice"/>		
+			</menu>
 		</subsection>
 </section>
 </webtop>

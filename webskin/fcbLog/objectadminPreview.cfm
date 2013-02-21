@@ -1,0 +1,1 @@
+<cfoutput><a href="#application.fapi.getLink(objectid=stObj.objectid,type='fcbLog')#" target="_blank">View log</a></cfoutput>
