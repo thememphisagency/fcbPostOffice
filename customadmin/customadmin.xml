@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Sample webtop XML config; remove comments to activate -->
+<webtop>
+
+<section id="admin">		
+		<subsection id="coapi" mergeType="merge" label="Developer Utilities">
+		<menu id="logs" label="Logging">
+			<menuitem id="listLog" label="Logs" link="/admin/customadmin.cfm?module=customlists/fcbLog.cfm&amp;plugin=fcbpostoffice"/>		
+	</menu>
+		</subsection>
+</section>
+</webtop>
