@@ -1,4 +1,4 @@
-<cfcomponent extends="mxunit.framework.TestCase">
+<cfcomponent extends="farcry.plugins.testmxunit.tests.FarCryTestCase">
 
 	<cfimport path="farcry.plugins.fcbpostoffice.packages.types.fcbEmail" />
 
@@ -118,6 +118,12 @@
 
 		<!--- try and send the email without a body, it should fail --->
 		<cfset oEmail.send() />
+
+	</cffunction>
+
+	<cffunction name="test_dependency_fcbLog" returntype="void" access="public">
+		
+		<cfset assertContentTypeExists('fcbLog') />
 
 	</cffunction>
 
