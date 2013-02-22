@@ -152,7 +152,7 @@
 
 		<!--- check it's been inserted into the database --->
 		<cfset assertEquals(logObjectid, oLog.objectid) />
-		<cfset assertEquals(stDefault, deserializeJSON(oLog.data)) />
+		<cfset assertEquals(stDefault, deserializeJSON(oLog.metadata)) />
 
 	</cffunction>
 
@@ -185,7 +185,7 @@
 
 		<!--- check it's been inserted into the database --->
 		<cfset assertEquals(logObjectid, oLog.objectid) />
-		<cfset assertEquals(stDefault, deserializeJSON(oLog.data)) />
+		<cfset assertEquals(stDefault, deserializeJSON(oLog.metadata)) />
 
 		<!--- check the email has been sent --->
 		<cfset assertTrue(checkLogs(stDefault.subject, stDefault.from), "subject #stDefault.subject#") />

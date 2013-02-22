@@ -77,17 +77,19 @@
 
 		<cfset var log = application.fapi.getContentType('fcbLog') />
 		<cfset var stProperties = structNew() />
-		<cfset var data = structNew() />
+		<cfset var metadata = structNew() />
 
 		<!--- serialize properties into a json object --->
 		<cfloop list="to,from,subject,body,cc,bcc" index="prop">
 			<cfif len(this[prop])>
-				<cfset data[prop] = this[prop] />
+				<cfset metadata[prop] = this[prop] />
 			</cfif>
 		</cfloop>
 
-		<cfset stProperties.data = serializeJSON(data) />
+		<cfset stProperties.metadata = serializeJSON(metadata) />
 		<cfset stProperties.reference = 'fcbEmail' />
+		<cfset stProperties.level = 'info' />
+		<cfset stProperties.message = 'Email sent to: ''#this.to#'' with subject: ''#this.subject#''' />
 
 		<cfset var stObj = log.createData(stProperties = stProperties) />
 
