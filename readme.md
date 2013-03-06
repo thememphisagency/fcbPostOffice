@@ -23,7 +23,7 @@ Dependencies
 Basic usage
 -----------
 
-	<cfimport path="farcry.plugins.fcbpostoffice.packages.types.fcbEmail" />
+	<cfimport path="farcry.plugins.fcbpostoffice.packages.fcb.fcbEmail" />
 
 	<cfset var oEmail = new fcbEmail(
 			to = 'to@domain.com',

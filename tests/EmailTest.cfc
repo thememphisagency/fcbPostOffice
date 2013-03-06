@@ -1,6 +1,6 @@
 <cfcomponent extends="farcry.plugins.testmxunit.tests.FarCryTestCase">
 
-	<cfimport path="farcry.plugins.fcbpostoffice.packages.types.fcbEmail" />
+	<cfimport path="farcry.plugins.fcbpostoffice.packages.fcb.fcbEmail" />
 
 	<!--- setup and teardown --->
 	<cffunction name="setUp" returntype="void" access="public">
