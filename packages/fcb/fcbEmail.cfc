@@ -49,17 +49,18 @@
 		</cfif>
 
 		<cfset var objectid = '' />
-		<cfset var attr = structNew() />
+		<cfset var mailServer = new mail() />
+
 		<cfloop list="to,from,subject,body,cc,bcc" index="prop">
 			<cfif len(this[prop])>
-				<cfset attr[prop] = this[prop] />
+				<cfset evaluate("mailServer.set#prop#(this[prop])")/>
 			</cfif>
 		</cfloop>
 
+
 		<!--- let's send the email and log it if required --->
-		<cfset var mailServer = new mail() />
-		<cfset mailServer.setAttributes(attr) />
 		<cfset mailServer.send() />
+
 
 		<!--- do we need to log the email? --->
 		<cfif arguments.bLog>
